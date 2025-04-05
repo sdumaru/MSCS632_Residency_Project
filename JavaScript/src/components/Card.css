@@ -5,7 +5,8 @@
   padding: 16px;
   margin: 8px;
   width: 300px;
-  transition: transform 0.2s ease-in-out;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
 .card:hover {
@@ -32,6 +33,21 @@
   color: white;
   font-size: 0.8rem;
   font-weight: bold;
+  min-width: 70px;
+  max-width: 70px;
+  width: 70px;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: inline-block;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.priority-badge:hover {
+  opacity: 0.9;
 }
 
 .card-body {
@@ -41,4 +57,53 @@
 .status, .assignee {
   margin: 4px 0;
   font-size: 0.9rem;
+}
+
+.card-actions {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.card:hover .card-actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.move-button {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  position: absolute;
+}
+
+.move-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #333;
+}
+
+.move-button.left {
+  left: 8px;
+}
+
+.move-button.right {
+  right: 8px;
 } 

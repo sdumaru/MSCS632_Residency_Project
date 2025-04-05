@@ -1,7 +1,7 @@
 import React from 'react';
 import './Card.css';
 
-const Card = ({ todo }) => {
+const Card = ({ todo, onMoveLeft, onMoveRight, onPriorityChange }) => {
   const getPriorityColor = (priority) => {
     switch (priority.toLowerCase()) {
       case 'high':
@@ -15,6 +15,13 @@ const Card = ({ todo }) => {
     }
   };
 
+  const handlePriorityClick = () => {
+    const priorities = ['Low', 'Medium', 'High'];
+    const currentIndex = priorities.indexOf(todo.priority);
+    const nextIndex = (currentIndex + 1) % priorities.length;
+    onPriorityChange(todo, priorities[nextIndex]);
+  };
+
   return (
     <div className="card">
       <div className="card-header">
@@ -22,12 +29,33 @@ const Card = ({ todo }) => {
         <span 
           className="priority-badge"
           style={{ backgroundColor: getPriorityColor(todo.priority) }}
+          onClick={handlePriorityClick}
         >
           {todo.priority}
         </span>
       </div>
       <div className="card-body">
         <p className="assignee">Assignee: {todo.assignee}</p>
+      </div>
+      <div className="card-actions">
+        {todo.status !== 'To Do' && (
+          <button 
+            className="move-button left"
+            onClick={() => onMoveLeft(todo)}
+            aria-label="Move to previous column"
+          >
+            ←
+          </button>
+        )}
+        {todo.status !== 'Completed' && (
+          <button 
+            className="move-button right"
+            onClick={() => onMoveRight(todo)}
+            aria-label="Move to next column"
+          >
+            →
+          </button>
+        )}
       </div>
     </div>
   );

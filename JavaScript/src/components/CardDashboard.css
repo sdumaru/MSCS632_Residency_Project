@@ -20,10 +20,18 @@
 
 .status-column {
   flex: 1;
+  min-width: 300px;
   background-color: #f0f0f0;
   border-radius: 8px;
   padding: 16px;
   min-height: 200px;
+  transition: background-color 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.status-column.drag-over {
+  background-color: #e0e0e0;
 }
 
 .column-title {
@@ -38,6 +46,7 @@
   flex-direction: column;
   gap: 12px;
   min-height: 100px;
+  flex: 1;
 }
 
 /* Drag and drop styles */
@@ -53,4 +62,10 @@
 .cards-container > div.dragging {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
   transform: scale(1.02);
+  opacity: 0.8;
+}
+
+/* Add a placeholder for the dragged item */
+.cards-container > div.dragging + div {
+  transform: translateY(-100%);
 } 
