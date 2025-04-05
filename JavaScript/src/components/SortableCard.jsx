@@ -3,7 +3,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import Card from './Card';
 
-export function SortableCard({ todo, onMoveLeft, onMoveRight, onPriorityChange }) {
+export function SortableCard({ todo, onMoveLeft, onMoveRight, onPriorityChange, onAssigneeChange, assigneeOptions }) {
   const {
     attributes,
     listeners,
@@ -25,6 +25,8 @@ export function SortableCard({ todo, onMoveLeft, onMoveRight, onPriorityChange }
         onMoveLeft={onMoveLeft}
         onMoveRight={onMoveRight}
         onPriorityChange={onPriorityChange}
+        onAssigneeChange={onAssigneeChange}
+        assigneeOptions={assigneeOptions}
       />
     </div>
   );

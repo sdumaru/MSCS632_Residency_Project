@@ -1,7 +1,14 @@
 import React from 'react';
 import './Card.css';
 
-const Card = ({ todo, onMoveLeft, onMoveRight, onPriorityChange }) => {
+const Card = ({ 
+  todo, 
+  onMoveLeft, 
+  onMoveRight, 
+  onPriorityChange, 
+  onAssigneeChange,
+  assigneeOptions
+}) => {
   const getPriorityColor = (priority) => {
     switch (priority.toLowerCase()) {
       case 'high':
@@ -22,6 +29,10 @@ const Card = ({ todo, onMoveLeft, onMoveRight, onPriorityChange }) => {
     onPriorityChange(todo, priorities[nextIndex]);
   };
 
+  const handleAssigneeChange = (e) => {
+    onAssigneeChange(todo, e.target.value);
+  };
+
   return (
     <div className="card">
       <div className="card-header">
@@ -35,7 +46,20 @@ const Card = ({ todo, onMoveLeft, onMoveRight, onPriorityChange }) => {
         </span>
       </div>
       <div className="card-body">
-        <p className="assignee">Assignee: {todo.assignee}</p>
+        <div className="assignee-container">
+          <span className="assignee-label">Assignee: </span>
+          <select
+            value={todo.assignee}
+            onChange={handleAssigneeChange}
+            className="assignee-select"
+          >
+            {assigneeOptions.map(option => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
       <div className="card-actions">
         {todo.status !== 'To Do' && (

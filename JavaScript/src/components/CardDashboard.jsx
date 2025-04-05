@@ -58,6 +58,7 @@ const initialTodos = [
 
 const CardDashboard = () => {
   const [todos, setTodos] = useState(initialTodos);
+  const [assigneeOptions] = useState(['John Doe', 'Jane Smith', 'Mike Johnson', 'Sarah Wilson']);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -148,6 +149,12 @@ const CardDashboard = () => {
     ));
   };
 
+  const handleAssigneeChange = (todo, newAssignee) => {
+    setTodos(todos.map(t => 
+      t.id === todo.id ? { ...t, assignee: newAssignee } : t
+    ));
+  };
+
   return (
     <div className="dashboard">
       <h2>Todo Dashboard</h2>
@@ -173,6 +180,8 @@ const CardDashboard = () => {
                       onMoveLeft={handleMoveLeft}
                       onMoveRight={handleMoveRight}
                       onPriorityChange={handlePriorityChange}
+                      onAssigneeChange={handleAssigneeChange}
+                      assigneeOptions={assigneeOptions}
                     />
                   ))}
                 </div>
