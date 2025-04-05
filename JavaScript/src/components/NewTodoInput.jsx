@@ -1,34 +1,34 @@
 import React, { useState } from 'react';
 import './NewTodoInput.css';
 
-const NewTodoInput = ({ onAddTodo }) => {
+const NewTodoInput = ({ onAddTodo, assigneeOptions }) => {
   const [title, setTitle] = useState('');
-  const [priority, setPriority] = useState('Low');
-  const [assignee, setAssignee] = useState('John');
+  const [priority, setPriority] = useState('Medium');
+  const [assignee, setAssignee] = useState('unassigned');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!title.trim()) return;
-
-    const newTodo = {
-      id: Date.now(),
-      title: title.trim(),
-      priority,
-      status: 'To Do',
-      assignee
-    };
-
-    onAddTodo(newTodo);
-    setTitle('');
+    if (title.trim()) {
+      onAddTodo({
+        id: Date.now(),
+        title: title.trim(),
+        priority,
+        status: 'To Do',
+        assignee: assignee === 'unassigned' ? null : assignee
+      });
+      setTitle('');
+      setPriority('Medium');
+      setAssignee('unassigned');
+    }
   };
 
   return (
-    <form className="new-todo-form" onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="new-todo-form">
       <input
         type="text"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        placeholder="Add a new task..."
+        placeholder="Enter task title"
         className="new-todo-input"
       />
       <div className="select-row">
@@ -37,24 +37,24 @@ const NewTodoInput = ({ onAddTodo }) => {
           onChange={(e) => setPriority(e.target.value)}
           className="priority-select"
         >
-          <option value="Low">Low</option>
-          <option value="Medium">Medium</option>
           <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
         </select>
         <select
           value={assignee}
           onChange={(e) => setAssignee(e.target.value)}
           className="assignee-select"
         >
-          <option value="John">John</option>
-          <option value="Jane">Jane</option>
-          <option value="Bob">Bob</option>
-          <option value="Alice">Alice</option>
+          <option value="unassigned">Unassigned</option>
+          {assigneeOptions.map(option => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
         </select>
       </div>
-      <button type="submit" className="add-button" disabled={!title.trim()}>
-        Add Task
-      </button>
+      <button type="submit" className="add-button">Add Task</button>
     </form>
   );
 };
