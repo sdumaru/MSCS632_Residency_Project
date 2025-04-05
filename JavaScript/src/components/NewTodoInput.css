@@ -1,67 +1,64 @@
+.new-todo-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+  margin: 8px;
+  width: 300px;
+}
+
 .new-todo-form {
-    margin: 16px 8px;
-    padding: 16px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-  
-  .input-group {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-  
-  .todo-input {
-    flex: 1;
-    padding: 8px 12px;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    font-size: 0.95rem;
-    color: #333;
-    background-color: #fff;
-    min-width: 0;
-  }
-  
-  .todo-input:focus {
-    outline: none;
-    border-color: #999;
-  }
-  
-  .priority-select {
-    width: 100px;
-    padding: 8px 12px;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-    font-size: 0.95rem;
-    color: #333;
-    background-color: #fff;
-    cursor: pointer;
-    flex-shrink: 0;
-  }
-  
-  .priority-select:focus {
-    outline: none;
-    border-color: #999;
-  }
-  
-  .save-button {
-    width: 100%;
-    padding: 8px;
-    background-color: #333;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  
-  .save-button:hover {
-    background-color: #444;
-  }
-  
-  .save-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  } 
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.new-todo-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.new-todo-input:focus {
+  outline: none;
+  border-color: #4a90e2;
+}
+
+.select-row {
+  display: flex;
+  gap: 8px;
+}
+
+.priority-select,
+.assignee-select {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  background-color: white;
+}
+
+.add-button {
+  width: 100%;
+  padding: 8px 16px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.add-button:hover {
+  background-color: #357abd;
+}
+
+.add-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

@@ -18,7 +18,7 @@
   padding: 0 20px;
 }
 
-.status-column {
+.column {
   flex: 1;
   min-width: 300px;
   background-color: #f0f0f0;
@@ -30,15 +30,12 @@
   flex-direction: column;
 }
 
-.status-column.drag-over {
-  background-color: #e0e0e0;
-}
-
-.column-title {
+.column h2 {
   color: #333;
   margin: 0 0 16px 0;
   padding-bottom: 8px;
   border-bottom: 2px solid #ddd;
+  text-align: left;
 }
 
 .cards-container {

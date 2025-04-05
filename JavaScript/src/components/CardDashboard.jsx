@@ -1,198 +1,165 @@
-import React, { useState } from 'react';
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
-import { SortableCard } from './SortableCard';
+import React from 'react';
+import Card from './Card';
 import NewTodoInput from './NewTodoInput';
 import './CardDashboard.css';
 
-const initialTodos = [
-  {
-    id: 1,
-    title: 'Implement user authentication',
-    priority: 'High',
-    status: 'In Progress',
-    assignee: 'John Doe'
-  },
-  {
-    id: 2,
-    title: 'Fix responsive design issues',
-    priority: 'Medium',
-    status: 'To Do',
-    assignee: 'Jane Smith'
-  },
-  {
-    id: 3,
-    title: 'Add unit tests',
-    priority: 'Low',
-    status: 'Completed',
-    assignee: 'Mike Johnson'
-  },
-  {
-    id: 4,
-    title: 'Update documentation',
-    priority: 'Medium',
-    status: 'In Progress',
-    assignee: 'Sarah Wilson'
-  },
-  {
-    id: 5,
-    title: 'Optimize database queries',
-    priority: 'High',
-    status: 'To Do',
-    assignee: 'Alex Brown'
-  }
-];
+const CardDashboard = ({ todos, onTodosChange }) => {
+  const statuses = ['To Do', 'In Progress', 'Completed'];
 
-const CardDashboard = () => {
-  const [todos, setTodos] = useState(initialTodos);
-  const [assigneeOptions] = useState(['John Doe', 'Jane Smith', 'Mike Johnson', 'Sarah Wilson']);
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 5,
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
-  const todosByStatus = todos.reduce((acc, todo) => {
-    if (!acc[todo.status]) {
-      acc[todo.status] = [];
-    }
-    acc[todo.status].push(todo);
-    return acc;
-  }, {});
-
-  const statusColumns = [
-    { title: 'To Do', status: 'To Do' },
-    { title: 'In Progress', status: 'In Progress' },
-    { title: 'Completed', status: 'Completed' }
-  ];
-
-  const getNextStatus = (currentStatus) => {
-    const currentIndex = statusColumns.findIndex(col => col.status === currentStatus);
-    return statusColumns[currentIndex + 1]?.status || currentStatus;
+  const handleAddTodo = (newTodo) => {
+    onTodosChange(prevTodos => [...prevTodos, newTodo]);
   };
 
-  const getPrevStatus = (currentStatus) => {
-    const currentIndex = statusColumns.findIndex(col => col.status === currentStatus);
-    return statusColumns[currentIndex - 1]?.status || currentStatus;
+  const handleMoveUp = (todoId, status) => {
+    onTodosChange(prevTodos => {
+      const columnTodos = prevTodos.filter(todo => todo.status === status);
+      const todoIndex = columnTodos.findIndex(todo => todo.id === todoId);
+      
+      if (todoIndex <= 0) return prevTodos;
+      
+      const newTodos = [...prevTodos];
+      const currentTodo = newTodos.find(todo => todo.id === todoId);
+      const prevTodo = columnTodos[todoIndex - 1];
+      
+      const currentIndex = newTodos.indexOf(currentTodo);
+      const prevIndex = newTodos.indexOf(prevTodo);
+      
+      [newTodos[currentIndex], newTodos[prevIndex]] = [newTodos[prevIndex], newTodos[currentIndex]];
+      
+      return newTodos;
+    });
+  };
+
+  const handleMoveDown = (todoId, status) => {
+    onTodosChange(prevTodos => {
+      const columnTodos = prevTodos.filter(todo => todo.status === status);
+      const todoIndex = columnTodos.findIndex(todo => todo.id === todoId);
+      
+      if (todoIndex >= columnTodos.length - 1) return prevTodos;
+      
+      const newTodos = [...prevTodos];
+      const currentTodo = newTodos.find(todo => todo.id === todoId);
+      const nextTodo = columnTodos[todoIndex + 1];
+      
+      const currentIndex = newTodos.indexOf(currentTodo);
+      const nextIndex = newTodos.indexOf(nextTodo);
+      
+      [newTodos[currentIndex], newTodos[nextIndex]] = [newTodos[nextIndex], newTodos[currentIndex]];
+      
+      return newTodos;
+    });
   };
 
   const handleMoveLeft = (todo) => {
-    const prevStatus = getPrevStatus(todo.status);
-    const updatedTodos = todos.filter(t => t.id !== todo.id);
-    setTodos([{ ...todo, status: prevStatus }, ...updatedTodos]);
+    onTodosChange(prevTodos => {
+      const newTodos = [...prevTodos];
+      const todoIndex = newTodos.findIndex(t => t.id === todo.id);
+      
+      if (todoIndex === -1) return prevTodos;
+      
+      const currentStatusIndex = statuses.indexOf(todo.status);
+      if (currentStatusIndex <= 0) return prevTodos;
+      
+      newTodos[todoIndex] = {
+        ...newTodos[todoIndex],
+        status: statuses[currentStatusIndex - 1]
+      };
+      
+      return newTodos;
+    });
   };
 
   const handleMoveRight = (todo) => {
-    const nextStatus = getNextStatus(todo.status);
-    const updatedTodos = todos.filter(t => t.id !== todo.id);
-    setTodos([{ ...todo, status: nextStatus }, ...updatedTodos]);
+    onTodosChange(prevTodos => {
+      const newTodos = [...prevTodos];
+      const todoIndex = newTodos.findIndex(t => t.id === todo.id);
+      
+      if (todoIndex === -1) return prevTodos;
+      
+      const currentStatusIndex = statuses.indexOf(todo.status);
+      if (currentStatusIndex >= statuses.length - 1) return prevTodos;
+      
+      newTodos[todoIndex] = {
+        ...newTodos[todoIndex],
+        status: statuses[currentStatusIndex + 1]
+      };
+      
+      return newTodos;
+    });
   };
 
-  const handleDragEnd = (event) => {
-    const { active, over } = event;
-
-    if (!over) return;
-
-    const activeTodo = todos.find(todo => todo.id === active.id);
-    const overTodo = todos.find(todo => todo.id === over.id);
-
-    if (!activeTodo || !overTodo || activeTodo.status !== overTodo.status) return;
-
-    // Get all todos in the same column
-    const columnTodos = todos.filter(todo => todo.status === activeTodo.status);
-    
-    // Find the old and new indices
-    const oldIndex = columnTodos.findIndex(todo => todo.id === active.id);
-    const newIndex = columnTodos.findIndex(todo => todo.id === over.id);
-
-    if (oldIndex === newIndex) return;
-
-    // Create a new array with the moved item
-    const newColumnTodos = arrayMove(columnTodos, oldIndex, newIndex);
-    
-    // Create a new todos array with the updated column
-    const newTodos = todos.filter(todo => todo.status !== activeTodo.status);
-    setTodos([...newTodos, ...newColumnTodos]);
-  };
-
-  const handleAddTodo = (newTodo) => {
-    // Get all todos except the ones in To Do
-    const otherTodos = todos.filter(todo => todo.status !== 'To Do');
-    // Get all To Do todos
-    const todoTodos = todos.filter(todo => todo.status === 'To Do');
-    // Add the new todo to the end of To Do todos
-    setTodos([...otherTodos, ...todoTodos, newTodo]);
-  };
-
-  const handlePriorityChange = (todo, newPriority) => {
-    setTodos(todos.map(t => 
-      t.id === todo.id ? { ...t, priority: newPriority } : t
-    ));
+  const handlePriorityChange = (todo) => {
+    onTodosChange(prevTodos => {
+      const newTodos = [...prevTodos];
+      const todoIndex = newTodos.findIndex(t => t.id === todo.id);
+      
+      if (todoIndex === -1) return prevTodos;
+      
+      const priorities = ['Low', 'Medium', 'High'];
+      const currentPriorityIndex = priorities.indexOf(todo.priority);
+      const nextPriorityIndex = (currentPriorityIndex + 1) % priorities.length;
+      
+      newTodos[todoIndex] = {
+        ...newTodos[todoIndex],
+        priority: priorities[nextPriorityIndex]
+      };
+      
+      return newTodos;
+    });
   };
 
   const handleAssigneeChange = (todo, newAssignee) => {
-    setTodos(todos.map(t => 
-      t.id === todo.id ? { ...t, assignee: newAssignee } : t
-    ));
+    onTodosChange(prevTodos => {
+      const newTodos = [...prevTodos];
+      const todoIndex = newTodos.findIndex(t => t.id === todo.id);
+      
+      if (todoIndex === -1) return prevTodos;
+      
+      newTodos[todoIndex] = {
+        ...newTodos[todoIndex],
+        assignee: newAssignee
+      };
+      
+      return newTodos;
+    });
   };
+
+  const assigneeOptions = ['John', 'Jane', 'Bob', 'Alice'];
 
   return (
     <div className="dashboard">
-      <h2>Todo Dashboard</h2>
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-        modifiers={[restrictToVerticalAxis]}
-      >
-        <div className="columns-container">
-          {statusColumns.map((column) => (
-            <div key={column.status} className="status-column">
-              <h3 className="column-title">{column.title}</h3>
-              <SortableContext
-                items={(todosByStatus[column.status] || []).map(todo => todo.id)}
-                strategy={verticalListSortingStrategy}
-              >
-                <div className="cards-container">
-                  {(todosByStatus[column.status] || []).map((todo) => (
-                    <SortableCard 
-                      key={todo.id} 
-                      todo={todo} 
-                      onMoveLeft={handleMoveLeft}
-                      onMoveRight={handleMoveRight}
-                      onPriorityChange={handlePriorityChange}
-                      onAssigneeChange={handleAssigneeChange}
-                      assigneeOptions={assigneeOptions}
-                    />
-                  ))}
-                </div>
-              </SortableContext>
-              {column.status === 'To Do' && (
-                <NewTodoInput onAddTodo={handleAddTodo} />
-              )}
+      <div className="columns-container">
+        {statuses.map((status) => {
+          const columnTodos = todos.filter(todo => todo.status === status);
+          return (
+            <div key={status} className="column">
+              <h2 className="column-title">{status}</h2>
+              <div className="cards-container">
+                {columnTodos.map((todo, index) => (
+                  <Card
+                    key={todo.id}
+                    todo={todo}
+                    onMoveUp={() => handleMoveUp(todo.id, status)}
+                    onMoveDown={() => handleMoveDown(todo.id, status)}
+                    onMoveLeft={() => handleMoveLeft(todo)}
+                    onMoveRight={() => handleMoveRight(todo)}
+                    onPriorityChange={handlePriorityChange}
+                    onAssigneeChange={handleAssigneeChange}
+                    assigneeOptions={assigneeOptions}
+                    isFirst={index === 0}
+                    isLast={index === columnTodos.length - 1}
+                  />
+                ))}
+                {status === 'To Do' && (
+                  <div className="new-todo-card">
+                    <NewTodoInput onAddTodo={handleAddTodo} />
+                  </div>
+                )}
+              </div>
             </div>
-          ))}
-        </div>
-      </DndContext>
+          );
+        })}
+      </div>
     </div>
   );
 };

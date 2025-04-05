@@ -3,11 +3,15 @@ import './Card.css';
 
 const Card = ({ 
   todo, 
-  onMoveLeft, 
-  onMoveRight, 
+  onMoveUp,
+  onMoveDown,
+  onMoveLeft,
+  onMoveRight,
   onPriorityChange, 
   onAssigneeChange,
-  assigneeOptions
+  assigneeOptions,
+  isFirst,
+  isLast
 }) => {
   const getPriorityColor = (priority) => {
     switch (priority.toLowerCase()) {
@@ -22,13 +26,6 @@ const Card = ({
     }
   };
 
-  const handlePriorityClick = () => {
-    const priorities = ['Low', 'Medium', 'High'];
-    const currentIndex = priorities.indexOf(todo.priority);
-    const nextIndex = (currentIndex + 1) % priorities.length;
-    onPriorityChange(todo, priorities[nextIndex]);
-  };
-
   const handleAssigneeChange = (e) => {
     onAssigneeChange(todo, e.target.value);
   };
@@ -38,9 +35,9 @@ const Card = ({
       <div className="card-header">
         <h3 className="card-title">{todo.title}</h3>
         <span 
-          className="priority-badge"
+          className="priority-badge" 
           style={{ backgroundColor: getPriorityColor(todo.priority) }}
-          onClick={handlePriorityClick}
+          onClick={() => onPriorityChange(todo)}
         >
           {todo.priority}
         </span>
@@ -62,24 +59,46 @@ const Card = ({
         </div>
       </div>
       <div className="card-actions">
-        {todo.status !== 'To Do' && (
-          <button 
-            className="move-button left"
-            onClick={() => onMoveLeft(todo)}
-            aria-label="Move to previous column"
-          >
-            ←
-          </button>
-        )}
-        {todo.status !== 'Completed' && (
-          <button 
-            className="move-button right"
-            onClick={() => onMoveRight(todo)}
-            aria-label="Move to next column"
-          >
-            →
-          </button>
-        )}
+        <div className="vertical-actions">
+          {!isFirst && (
+            <button 
+              className="move-button up"
+              onClick={() => onMoveUp(todo.id)}
+              aria-label="Move up"
+            >
+              ↑
+            </button>
+          )}
+          {!isLast && (
+            <button 
+              className="move-button down"
+              onClick={() => onMoveDown(todo.id)}
+              aria-label="Move down"
+            >
+              ↓
+            </button>
+          )}
+        </div>
+        <div className="horizontal-actions">
+          {todo.status !== 'To Do' && (
+            <button 
+              className="move-button left"
+              onClick={() => onMoveLeft(todo)}
+              aria-label="Move to previous column"
+            >
+              ←
+            </button>
+          )}
+          {todo.status !== 'Completed' && (
+            <button 
+              className="move-button right"
+              onClick={() => onMoveRight(todo)}
+              aria-label="Move to next column"
+            >
+              →
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

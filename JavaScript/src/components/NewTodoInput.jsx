@@ -3,7 +3,8 @@ import './NewTodoInput.css';
 
 const NewTodoInput = ({ onAddTodo }) => {
   const [title, setTitle] = useState('');
-  const [priority, setPriority] = useState('Medium');
+  const [priority, setPriority] = useState('Low');
+  const [assignee, setAssignee] = useState('John');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -14,7 +15,7 @@ const NewTodoInput = ({ onAddTodo }) => {
       title: title.trim(),
       priority,
       status: 'To Do',
-      assignee: 'Unassigned'
+      assignee
     };
 
     onAddTodo(newTodo);
@@ -23,14 +24,14 @@ const NewTodoInput = ({ onAddTodo }) => {
 
   return (
     <form className="new-todo-form" onSubmit={handleSubmit}>
-      <div className="input-group">
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="Add a new task..."
-          className="todo-input"
-        />
+      <input
+        type="text"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Add a new task..."
+        className="new-todo-input"
+      />
+      <div className="select-row">
         <select
           value={priority}
           onChange={(e) => setPriority(e.target.value)}
@@ -40,8 +41,18 @@ const NewTodoInput = ({ onAddTodo }) => {
           <option value="Medium">Medium</option>
           <option value="High">High</option>
         </select>
+        <select
+          value={assignee}
+          onChange={(e) => setAssignee(e.target.value)}
+          className="assignee-select"
+        >
+          <option value="John">John</option>
+          <option value="Jane">Jane</option>
+          <option value="Bob">Bob</option>
+          <option value="Alice">Alice</option>
+        </select>
       </div>
-      <button type="submit" className="save-button" disabled={!title.trim()}>
+      <button type="submit" className="add-button" disabled={!title.trim()}>
         Add Task
       </button>
     </form>

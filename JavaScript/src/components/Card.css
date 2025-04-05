@@ -54,45 +54,63 @@
   color: #666;
 }
 
-.status, .assignee {
-  margin: 4px 0;
+.assignee-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.assignee-label {
   font-size: 0.9rem;
+  color: #666;
+}
+
+.assignee-select {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  background-color: white;
+  position: relative;
+  z-index: 2;
 }
 
 .card-actions {
   position: absolute;
-  top: 50%;
+  top: 0;
   left: 0;
   right: 0;
+  bottom: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
   pointer-events: none;
-  transform: translateY(-50%);
-}
-
-.card:hover .card-actions {
-  opacity: 1;
-  pointer-events: auto;
 }
 
 .move-button {
+  position: absolute;
   background: none;
   border: none;
   color: #666;
   font-size: 1.2rem;
   cursor: pointer;
   padding: 8px;
-  border-radius: 50%;
+  border-radius: 4px;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 32px;
   height: 32px;
-  position: absolute;
+  opacity: 0;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.card:hover .move-button {
+  opacity: 1;
 }
 
 .move-button:hover {
@@ -101,9 +119,25 @@
 }
 
 .move-button.left {
-  left: 8px;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .move-button.right {
-  right: 8px;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.move-button.up {
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.move-button.down {
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
 } 
