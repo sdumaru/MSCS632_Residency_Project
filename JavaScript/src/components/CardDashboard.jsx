@@ -4,7 +4,7 @@ import NewTodoInput from './NewTodoInput';
 import './CardDashboard.css';
 import { addTodo, updateTodo } from '../firebase/services';
 
-const CardDashboard = ({ todos, onTodosChange, assigneeOptions }) => {
+const CardDashboard = ({ todos, assigneeOptions }) => {
   const statuses = ['To Do', 'In Progress', 'Completed'];
   const priorities = ['High', 'Medium', 'Low'];
 
