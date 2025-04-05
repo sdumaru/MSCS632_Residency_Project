@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import './App.css'
+import CardDashboard from './components/CardDashboard'
 
 function App() {
-
   return (
-    <>
-      <h1>Template</h1>
-    </>
+    <div className="app">
+      <CardDashboard />
+    </div>
   )
 }
 

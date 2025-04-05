@@ -1,0 +1,56 @@
+.dashboard {
+  padding: 20px;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.dashboard h2 {
+  color: #333;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.columns-container {
+  display: flex;
+  gap: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.status-column {
+  flex: 1;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  padding: 16px;
+  min-height: 200px;
+}
+
+.column-title {
+  color: #333;
+  margin: 0 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #ddd;
+}
+
+.cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 100px;
+}
+
+/* Drag and drop styles */
+.cards-container > div {
+  touch-action: none;
+}
+
+.cards-container > div:active {
+  cursor: grabbing;
+}
+
+/* Add some visual feedback when dragging */
+.cards-container > div.dragging {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transform: scale(1.02);
+} 
