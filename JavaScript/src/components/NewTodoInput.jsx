@@ -10,7 +10,6 @@ const NewTodoInput = ({ onAddTodo, assigneeOptions }) => {
     e.preventDefault();
     if (title.trim()) {
       onAddTodo({
-        id: Date.now(),
         title: title.trim(),
         priority,
         status: 'To Do',
