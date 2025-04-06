@@ -14,7 +14,7 @@ public class User {
     }
 
     public User(String username) {
-        this.username = username;
+        this.username = username.toLowerCase();
         this.name = username; // Default name to username if not specified
         this.createdAt = Timestamp.now();
     }
@@ -32,7 +32,7 @@ public class User {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.username = username.toLowerCase();
     }
 
     public String getName() {
@@ -40,7 +40,7 @@ public class User {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name.toLowerCase();
     }
 
     public Timestamp getCreatedAt() {

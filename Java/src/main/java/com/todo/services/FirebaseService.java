@@ -69,6 +69,35 @@ public class FirebaseService {
         return users;
     }
 
+    public static void deleteTodo(String id) throws ExecutionException, InterruptedException {
+        db.collection(COLLECTION_TODOS).document(id).delete().get();
+    }
+    
+    public static void deleteTodosByStatus(String status) throws ExecutionException, InterruptedException {
+        var snapshot = db.collection(COLLECTION_TODOS)
+            .whereEqualTo("status", status)
+            .get()
+            .get();
+        for (var doc : snapshot.getDocuments()) {
+            doc.getReference().delete().get();
+        }
+    }
+    
+    public static void unassignTodosForUser(String username) throws ExecutionException, InterruptedException {
+        var snapshot = db.collection(COLLECTION_TODOS)
+            .whereEqualTo("assignee", username)
+            .get()
+            .get();
+    
+        for (var doc : snapshot.getDocuments()) {
+            var todo = doc.toObject(Todo.class);
+            todo.setAssignee("Unassigned");
+            todo.setId(doc.getId());
+            doc.getReference().set(todo).get();
+        }
+    }
+    
+
     public static void addUser(User user) throws ExecutionException, InterruptedException {
         // Generate a new document reference with a random ID
         var docRef = db.collection(COLLECTION_USERS).document();
@@ -77,6 +106,10 @@ public class FirebaseService {
         // Create the document with the user data
         docRef.set(user).get();
     }
+
+    public static void deleteUser(String id) throws ExecutionException, InterruptedException {
+        db.collection(COLLECTION_USERS).document(id).delete().get();
+    }    
 
     public static boolean userExists(String name) throws ExecutionException, InterruptedException {
         return db.collection(COLLECTION_USERS)

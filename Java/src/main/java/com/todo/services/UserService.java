@@ -23,11 +23,32 @@ public class UserService {
         }
     }
 
+    public void deleteUser(String name) {
+        List<User> users = getAllUsers();
+        for (User user : users) {
+            if (user != null && user.getName().equalsIgnoreCase(name)) {
+                try {
+                    FirebaseService.deleteUser(user.getId());
+                    FirebaseService.unassignTodosForUser(user.getUsername().toLowerCase());
+                    System.out.println("User '" + name + "' deleted successfully.");
+                    return;
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
+                    return;
+                }
+            }
+        }
+        System.out.println("User '" + name + "' not found.");
+    }
+    
     public boolean userExists(String name) {
         if (name == null) {
             return false;
         }
+        String normalizedName = name.toLowerCase();
         return getAllUsers().stream()
-            .anyMatch(user -> user != null && user.getName() != null && user.getName().equals(name));
+            .anyMatch(user -> user != null && user.getName() != null &&
+                user.getName().equalsIgnoreCase(normalizedName));
     }
+    
 } 
