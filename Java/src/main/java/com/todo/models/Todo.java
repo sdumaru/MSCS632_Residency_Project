@@ -22,7 +22,7 @@ public class Todo {
         this.title = title;
         this.priority = priority;
         this.status = status;
-        this.assignee = assignee;
+        this.assignee = assignee.toLowerCase();
         this.createdAt = Timestamp.now();
         this.updatedAt = Timestamp.now();
     }
@@ -67,7 +67,7 @@ public class Todo {
     }
 
     public void setAssignee(String assignee) {
-        this.assignee = assignee;
+        this.assignee = assignee !=null ? assignee.toLowerCase(): "Unassigned";
         this.updatedAt = Timestamp.now();
     }
 

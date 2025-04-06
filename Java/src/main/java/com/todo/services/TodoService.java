@@ -41,6 +41,22 @@ public class TodoService {
             .orElse(null);
     }
 
+    public void deleteTodoById(String id) {
+        try {
+            FirebaseService.deleteTodo(id);
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void deleteTodosByStatus(String status) {
+        try {
+            FirebaseService.deleteTodosByStatus(status);
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }    
+
     public void updateTodoStatus(String id, String status) {
         Todo todo = getTodoById(id);
         if (todo != null) {

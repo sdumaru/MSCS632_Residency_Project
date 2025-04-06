@@ -1,2 +1,11 @@
+# macOS & IDE junk
+.DS_Store
+.vscode/
+*.class
+
+# build/test artifacts
+*.jar
+Java/src/test/
+
 advanced.json
 target/
