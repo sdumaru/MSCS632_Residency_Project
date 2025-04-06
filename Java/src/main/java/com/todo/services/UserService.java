@@ -23,8 +23,11 @@ public class UserService {
         }
     }
 
-    public boolean userExists(String username) {
+    public boolean userExists(String name) {
+        if (name == null) {
+            return false;
+        }
         return getAllUsers().stream()
-            .anyMatch(user -> user.getUsername().equals(username));
+            .anyMatch(user -> user != null && user.getName() != null && user.getName().equals(name));
     }
 } 

@@ -8,6 +8,7 @@ import com.todo.models.User;
 
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.List;
 
 public class Main {
     private static final Scanner scanner = new Scanner(System.in);
@@ -156,38 +157,41 @@ public class Main {
 
     private static void manageUsers() {
         System.out.println("\n=== Manage Users ===");
-        System.out.println("1. View All Users");
-        System.out.println("2. Add New User");
+        System.out.println("1. Add User");
+        System.out.println("2. View All Users");
         System.out.println("0. Back");
-        
-        int choice = getIntInput("Enter your choice: ");
-        
+        System.out.print("Enter your choice: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
         switch (choice) {
             case 1:
-                displayUsers();
+                System.out.print("Enter user name: ");
+                String name = scanner.nextLine();
+                if (userService.userExists(name)) {
+                    System.out.println("User already exists!");
+                } else {
+                    User user = new User(name);
+                    userService.addUser(user);
+                    System.out.println("User added successfully!");
+                }
                 break;
             case 2:
-                addUser();
+                List<User> users = userService.getAllUsers();
+                if (users.isEmpty()) {
+                    System.out.println("No users found.");
+                } else {
+                    System.out.println("\nUsers:");
+                    for (User user : users) {
+                        System.out.println("Name: " + user.getName() + ", Created: " + user.getCreatedAt());
+                    }
+                }
                 break;
             case 0:
                 return;
             default:
-                System.out.println("Invalid choice.");
+                System.out.println("Invalid choice!");
         }
-    }
-
-    private static void displayUsers() {
-        System.out.println("\nUsers:");
-        for (User user : userService.getAllUsers()) {
-            System.out.println(user.getUsername());
-        }
-    }
-
-    private static void addUser() {
-        String username = getStringInput("Enter username: ");
-        User user = new User(username);
-        userService.addUser(user);
-        System.out.println("User added successfully: " + username);
     }
 
     private static void updateTodo() {

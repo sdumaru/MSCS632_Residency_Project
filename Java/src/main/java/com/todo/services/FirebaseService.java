@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class FirebaseService {
+public class FirebaseService {  
     private static Firestore db;
     private static final String COLLECTION_TODOS = "todos";
     private static final String COLLECTION_USERS = "users";
@@ -26,11 +26,11 @@ public class FirebaseService {
         LoadBalancerRegistry.getDefaultRegistry().register(new PickFirstLoadBalancerProvider());
 
         FirebaseOptions options = FirebaseOptions.builder()
-    .setCredentials(GoogleCredentials.getApplicationDefault())
-    .setDatabaseUrl("https://advancedprogramminglanguages.firebaseio.com/")
-    .build();
+            .setCredentials(GoogleCredentials.getApplicationDefault())
+            .setDatabaseUrl("https://advancedprogramminglanguages.firebaseio.com/")
+            .build();
 
-FirebaseApp.initializeApp(options);
+        FirebaseApp.initializeApp(options);
         db = FirestoreClient.getFirestore();
     }
 
@@ -46,7 +46,12 @@ FirebaseApp.initializeApp(options);
     }
 
     public static void addTodo(Todo todo) throws ExecutionException, InterruptedException {
-        db.collection(COLLECTION_TODOS).add(todo);
+        // Generate a new document reference with a random ID
+        var docRef = db.collection(COLLECTION_TODOS).document();
+        // Set the ID in the todo object
+        todo.setId(docRef.getId());
+        // Create the document with the todo data
+        docRef.set(todo).get();
     }
 
     public static void updateTodo(String id, Todo todo) throws ExecutionException, InterruptedException {
@@ -65,12 +70,17 @@ FirebaseApp.initializeApp(options);
     }
 
     public static void addUser(User user) throws ExecutionException, InterruptedException {
-        db.collection(COLLECTION_USERS).add(user);
+        // Generate a new document reference with a random ID
+        var docRef = db.collection(COLLECTION_USERS).document();
+        // Set the ID in the user object
+        user.setId(docRef.getId());
+        // Create the document with the user data
+        docRef.set(user).get();
     }
 
-    public static boolean userExists(String username) throws ExecutionException, InterruptedException {
+    public static boolean userExists(String name) throws ExecutionException, InterruptedException {
         return db.collection(COLLECTION_USERS)
-            .whereEqualTo("username", username)
+            .whereEqualTo("name", name)
             .get()
             .get()
             .getDocuments()
