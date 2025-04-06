@@ -1,6 +1,22 @@
-# MSCS 632: Advanced Programming Languages Residency Project
+# MSCS 632: Advanced Programming Languages Residency Project (Collaborative To-Do List Application)
 
-This project contains two implementations of a Todo application - one in Java and one in JavaScript.
+A real-time, cross-platform Collaborative To-Do List Application built using Java (CLI) and JavaScript (Web).  
+The app utilizes Firebase Firestore to sync user and task data across platforms.
+
+## Project Overview
+
+This project demonstrates how two different technologies — Java CLI and React Web App — can work together seamlessly to manage shared to-do lists in real-time using Firebase.
+
+## Features
+
+- Add / View / Update / Delete Completed Todos
+- Add / View / Delete Users
+- Real-time synchronization with Firebase Firestore
+- Filter Todos by Status and Priority (Java CLI)
+- Automatic unassignment of tasks when a user is deleted
+- JavaScript version supports live updates using Firebase snapshots
+  
+----
 
 ## JavaScript Project
 
@@ -46,3 +62,12 @@ To run the Java project:
    ```
 
 Note: Make sure you have Java and Maven installed on your system before running the Java project.
+
+----
+
+## References
+
+- https://firebase.google.com/docs/firestore  
+- https://react.dev  
+- https://docs.oracle.com/en/java/  
+- https://github.com/sdumaru/MSCS632_Residency_Project
